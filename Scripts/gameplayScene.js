@@ -11,7 +11,7 @@ export default class GameplayScene extends Phaser.Scene {
 
     preload() {
         this.load.image("player", "./Asset/Sprite/Combiner.png");
-        this.load.image("platform", "./Asset/Sprite/platform.png");
+        this.load.image("platform", "./Asset/Sprite/Platform.png");
         this.load.image('spike', './Asset/Sprite/spike.png');
         this.load.image('powerUp', './Asset/Sprite/powerUp.png');
     }
