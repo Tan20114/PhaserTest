@@ -33,7 +33,8 @@ export default class Player {
       left: Phaser.Input.Keyboard.KeyCodes.A,
       down: Phaser.Input.Keyboard.KeyCodes.S,
       right: Phaser.Input.Keyboard.KeyCodes.D,
-      enter: Phaser.Input.Keyboard.KeyCodes.ENTER
+      enter: Phaser.Input.Keyboard.KeyCodes.ENTER,
+      escape: Phaser.Input.Keyboard.KeyCodes.ESC,
     });
   }
   
@@ -133,6 +134,11 @@ export default class Player {
     if (this.keys.enter.isDown) {
       ScoreSystem.score = 0;
       this.scene.scene.restart();
+    }
+    if(this.keys.escape.isDown)
+    {
+      ScoreSystem.score = 0;
+      this.scene.scene.start('MainMenuScene');
     }
   }
 
