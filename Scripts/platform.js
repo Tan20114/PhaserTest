@@ -12,12 +12,14 @@ export default class Platform {
         this.xGap = 200;
         this.yLevel = 500;
         this.isFirstPlatform = true;
-        this.maxPlatformScale = 4;
+        this.maxPlatformScale = 1;
         
         // Moving platform properties
         this.platformTravelPath = 100; // Travel distance for moving platforms
         this.platformTravelTime = 3000; // Travel time
         
+        this.platformChance = 25;
+
         this.newSpike;
 
         // Add initial platform
@@ -33,19 +35,22 @@ export default class Platform {
 
     addPlatform() {
         let platform;
-        if (this.isFirstPlatform) {
-            platform = this.platform.create(400, this.yLevel, 'platform').setScale(4, 0.25).refreshBody();
+        if (this.isFirstPlatform) 
+        {
+            platform = this.platform.create(400, this.yLevel, 'platform').setScale(4, 1).refreshBody();
             this.isFirstPlatform = false;
-        } else {
-            const platformType = Phaser.Math.Between(0, 3);
-            if (platformType === 1) {
-                platform = this.createMovingPlatform();
-            } else if (platformType === 2) {
-                platform = this.createBouncyPlatform();
-            } else if (platformType === 3) {
-                platform = this.createSpikedPlatform();
+        }
+        else 
+        {
+            const platformType = Phaser.Math.Between(1, 100);
+            if (platformType <= this.platformChance) {
+            platform = this.createMovingPlatform();
+            } else if (platformType <= this.platformChance * 2) {
+            platform = this.createBouncyPlatform();
+            } else if (platformType <= this.platformChance * 3) {
+            platform = this.createSpikedPlatform();
             } else {
-                platform = this.createNormalPlatform();
+            platform = this.createNormalPlatform();
             }
         }
 
@@ -55,8 +60,8 @@ export default class Platform {
     createNormalPlatform() {
         const x = Phaser.Math.Between(200, 600);
         const y = this.yLevel;
-        const scaleX = this.maxPlatformScale * 0.1;
-        const scaleY = 0.25;
+        const scaleX = this.maxPlatformScale;
+        const scaleY = 1;
 
         return this.platform.create(x, y, 'platform').setScale(scaleX, scaleY).refreshBody();
     }
@@ -64,8 +69,8 @@ export default class Platform {
     createMovingPlatform() {
         const x = Phaser.Math.Between(300, 500);
         const y = this.yLevel;
-        const scaleX = 2 * 0.1;
-        const scaleY = 0.25;
+        const scaleX = .5;
+        const scaleY = 1;
 
         const platform = this.scene.physics.add.sprite(x, y, 'platform').setScale(scaleX, scaleY);
         platform.setImmovable(true);
@@ -89,12 +94,11 @@ export default class Platform {
     createBouncyPlatform() {
         const x = Phaser.Math.Between(200, 600);
         const y = this.yLevel;
-        const scaleX = this.maxPlatformScale * 0.1;
-        const scaleY = 0.25;
+        const scaleX = this.maxPlatformScale;
+        const scaleY = 1;
 
-        const platform = this.platform.create(x, y, 'platform').setScale(scaleX, scaleY).refreshBody();
-        platform.setTint(0x00ff00); // Bright green color for better visibility
-        platform.setAlpha(0.5); // Make the platform semi-transparent
+        const platform = this.platform.create(x, y, 'bouncePlat').setScale(scaleX, scaleY).refreshBody();
+
         platform.isBouncy = true;
 
         return platform;
@@ -103,8 +107,8 @@ export default class Platform {
     createSpikedPlatform() {
         const x = Phaser.Math.Between(200, 600);
         const y = this.yLevel;
-        const scaleX = this.maxPlatformScale * 0.1;
-        const scaleY = 0.25;
+        const scaleX = this.maxPlatformScale;
+        const scaleY = 1;
 
         const platform = this.platform.create(x, y, 'platform').setScale(scaleX, scaleY).refreshBody();
 
@@ -184,40 +188,52 @@ export default class Platform {
             // Move platform faster
             this.platformTravelTime = 3000;
             this.platformTravelPath = 100;
-            this.maxPlatformScale = 4;
+            this.maxPlatformScale = 1;
+
+            this.platformChance = 25;
         }
         if(ScoreSystem.level === 1)
         {
             // Move platform faster
             this.platformTravelTime = 2500;
             this.platformTravelPath = 150;
-            this.maxPlatformScale = 3.5;
+            this.maxPlatformScale = .875;
+
+            this.platformChance = 26;
         }
         if(ScoreSystem.level === 2)
         {
             this.platformTravelTime = 2000;
             this.platformTravelPath = 200;
-            this.maxPlatformScale = 3;
+            this.maxPlatformScale = 0.75;
+
+            this.platformChance = 27;
         }
         if(ScoreSystem.level === 3)
         {
             // Move platform faster
             this.platformTravelTime = 1500;
             this.platformTravelPath = 250;
-            this.maxPlatformScale = 2.5;
+            this.maxPlatformScale = .625;
+
+            this.platformChance = 28;
         }
         if(ScoreSystem.level === 4)
         {
             // Move platform faster
             this.platformTravelTime = 1000;
             this.platformTravelPath = 250;
-            this.maxPlatformScale = 2;
+            this.maxPlatformScale = .5;
+
+            this.platformChance = 29;
         }
         if(ScoreSystem.level === 5)
         {
             this.platformTravelTime = 1000;
             this.platformTravelPath = 250;
-            this.maxPlatformScale = 1.5;
+            this.maxPlatformScale = .375;
+
+            this.platformChance = 30;
         }
     }
 }

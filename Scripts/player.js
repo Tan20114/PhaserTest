@@ -15,13 +15,13 @@ export default class Player {
     this.isGround = false;
     this.isDead = false;
 
-    this.bounceForce = 600;
+    this.bounceForce = 350;
     this.airJumpResetValue = 1;
     this.platformSpawnTime = 500;
 
     this.player = scene.physics.add.sprite(x, y, "player");
     this.player.setCollideWorldBounds(true);
-    this.player.body.world.bounds.y = Number.NEGATIVE_INFINITY;
+    //this.player.body.world.bounds.y = Number.NEGATIVE_INFINITY;
     this.player.body.world.bounds.height = Number.POSITIVE_INFINITY;
 
     // Set up the collider with the platform
@@ -110,17 +110,29 @@ export default class Player {
     }
   }
 
-  CollectPowerUp = (player, powerUp) => {
+  CollectPowerUp = (player, powerUp) => 
+  {
+    // Destroy the power-up
     powerUp.destroy();
-    this.playerSpeed *= 2;
-    PowerUp.powerUpCount--
-    
-    this.scene.time.delayedCall(5000, () => {
-      this.playerSpeed /= 2;
-    });
-  }
+    PowerUp.powerUpCount--;
 
-  FallCheck() {
+    // Destroy particle effects if they exist
+    if (powerUp.emitter) {
+        powerUp.emitter.stop();
+        powerUp.emitter.manager.destroy();
+    }
+
+    // Apply speed boost
+    this.playerSpeed *= 2;
+
+    // Reset speed after 5 seconds
+    this.scene.time.delayedCall(5000, () => {
+        this.playerSpeed /= 2;
+    });
+  };
+
+  FallCheck() 
+  {
     if (this.player.y > 600) {
       this.isDead = true;
     }
@@ -130,14 +142,18 @@ export default class Player {
     this.isDead = true;
   }
 
-  Restart() {
-    if (this.keys.enter.isDown) {
+  Restart() 
+  {
+    if (this.keys.enter.isDown) 
+    {
       ScoreSystem.score = 0;
+      PowerUp.powerUpCount = 0;
       this.scene.scene.restart();
     }
     if(this.keys.escape.isDown)
     {
       ScoreSystem.score = 0;
+      PowerUp.powerUpCount = 0;
       this.scene.scene.start('MainMenuScene');
     }
   }
@@ -146,32 +162,32 @@ export default class Player {
   {
     if(ScoreSystem.level === 0)
     {
-      this.bounceForce = 600;
+      this.bounceForce = 350;
       this.platformSpawnTime = 500;
     }
     if(ScoreSystem.level === 1)
     {
-      this.bounceForce = 650;
+      this.bounceForce = 400;
       this.platformSpawnTime = 600;
     }
     if(ScoreSystem.level === 2)
     {
-      this.bounceForce = 700;
+      this.bounceForce = 450;
       this.platformSpawnTime = 700;
     }
     if(ScoreSystem.level === 3)
     {
-      this.bounceForce = 800;
+      this.bounceForce = 500;
       this.platformSpawnTime = 800;
     }
     if(ScoreSystem.level === 4)
     {
-      this.bounceForce = 900;
+      this.bounceForce = 550;
       this.platformSpawnTime = 900;
     }
     if(ScoreSystem.level === 5)
     {
-      this.bounceForce = 1000;
+      this.bounceForce = 600;
       this.platformSpawnTime = 1000;
     }
   }
