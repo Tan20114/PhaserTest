@@ -2,10 +2,13 @@ export default class ScoreSystem
 {
     static highScore = 0;
     static score = 0;
+    static previousScore = 0;
     static scoreText = null; // Make scoreText static
     static highScoreTxt = null;
     static levelTxt = null;
     static level = 1;
+
+    static scoreChanged = false;
 
     constructor(scene, scoreTxt, highScoreTxt, levelTxt) 
     {
@@ -13,6 +16,7 @@ export default class ScoreSystem
         ScoreSystem.scoreText = scoreTxt; // Set scoreText statically
         ScoreSystem.highScoreTxt = highScoreTxt;
         ScoreSystem.levelTxt = levelTxt;
+
     }
 
     update() 
@@ -28,7 +32,9 @@ export default class ScoreSystem
 
     static AddScore() 
     {
+        this.previousScore = this.score;
         this.score += 1;
+        this.hasScoreChanged();
     }
 
     static Difficulty() 
@@ -59,6 +65,14 @@ export default class ScoreSystem
         if(this.score >= 120) 
         {
             this.level = 5;
+        }
+    }
+
+    static hasScoreChanged() 
+    {
+        if(this.score !== this.previousScore)
+        {
+            this.scoreChanged = true;
         }
     }
 }

@@ -5,16 +5,16 @@ const config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
-    backgroundColor: "rgb(3, 120, 255)",
+    backgroundColor: "rgb(0,255,0)",
     parent: "game-container",
     physics: {
         default: "arcade",
         arcade: {
             gravity: { y: 300 },
-            debug: true,
+            //debug: true,
         },
     },
-    scene: [MainMenuScene,GameplayScene],
+    scene: [/*MainMenuScene,*/GameplayScene],
 };
 
 new Phaser.Game(config);

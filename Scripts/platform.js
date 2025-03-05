@@ -152,17 +152,33 @@ export default class Platform {
     }
 
     destroyPlatform() {
-        // Destroy static platforms
+        // Destroy static platforms with fall animation
         this.platform.getChildren().forEach(platform => {
             if (!platform.isDestroying) {
-                platform.destroy();
+                this.scene.tweens.add({
+                    targets: platform,
+                    y: platform.y + 200,
+                    ease: 'Sine.easeInOut',
+                    duration: 250,
+                    onComplete: () => {
+                        platform.destroy();
+                    }
+                });
             }
         });
 
-        // Destroy moving platforms and their tweens
+        // Destroy moving platforms and their tweens with fall animation
         this.movingPlatforms.forEach(({ platform, tween }) => {
             tween.stop();
-            platform.destroy();
+            this.scene.tweens.add({
+                targets: platform,
+                y: platform.y + 200,
+                ease: 'Sine.easeInOut',
+                duration: 100,
+                onComplete: () => {
+                    platform.destroy();
+                }
+            });
         });
 
         this.movingPlatforms = [];

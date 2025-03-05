@@ -19,7 +19,6 @@ export default class GameManager
         this.platform.update();
         ScoreSystem.Difficulty();
         this.scoreSystem.update();
-        PowerUp.update();
     }
 
     GameOver()

@@ -35,9 +35,4 @@ export default class PowerUp {
         }
         this.currentPowerUp = this.powerUp;
     }    
-
-    static update()
-    {
-        console.log(`Power-up count : ${this.powerUpCount}`);
-    }
 }
