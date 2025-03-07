@@ -4,6 +4,8 @@ export default class Paralax
 {
     constructor(scene)
     {
+
+
         this.scene = scene;
         this.cursors = this.scene.input.keyboard.createCursorKeys();
         this.key = this.scene.input.keyboard.addKeys({
@@ -11,6 +13,8 @@ export default class Paralax
             right: Phaser.Input.Keyboard.KeyCodes.D,
             up: Phaser.Input.Keyboard.KeyCodes.W
         });
+
+        this.isBGChanged = false;
 
         // Background
         this.sky = this.scene.add.tileSprite(0, -1400, 1000, 2000, 'sky').setOrigin(0,0);
@@ -21,16 +25,17 @@ export default class Paralax
 
     BackgroundUpdate()
     {
-        if(ScoreSystem.score >= 30)
+        if(ScoreSystem.score >= 30 && !this.isBGChanged)
         {
             this.back.setTexture('backGround2');
             this.mid.setTexture('midGround2');
             this.fore.setTexture('fore2');
             this.sky.setTexture('sky2');
+            this.isBGChanged = true;
         }
     }
 
-    ParalaxMove()
+    ParalaxMoveGame(num,num2)
     {
         if (this.cursors.left.isDown || this.key.left.isDown) {
             this.sky.tilePositionX -= .1;
@@ -91,5 +96,13 @@ export default class Paralax
                 }
             });
         }
+    }
+
+    ParalaxMove(num)
+    {
+        this.sky.tilePositionX -= .1;
+        this.back.tilePositionX -= .2;
+        this.mid.tilePositionX -= .5;
+        this.fore.tilePositionX -= 1;
     }
 }

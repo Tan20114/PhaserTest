@@ -23,32 +23,32 @@ export default class GameManager
 
     GameOver()
     {
-        if (this.player.isDead) {
-            const gameOverText = this.scene.add.text(this.scene.cameras.main.centerX, this.scene.cameras.main.centerY, 'Game Over', 
-            { 
-              fontSize: '64px',
-              fill: '#fff' 
-            });
-            gameOverText.setOrigin(0.5, 0.5);
-
-            const restartText = this.scene.add.text(this.scene.cameras.main.centerX, this.scene.cameras.main.centerY + 80, 'Enter to restart', 
-            { 
-              fontSize: '32px',
-              fill: '#fff' 
-            });
-            restartText.setOrigin(0.5, 0.5);
-
-            const mainMenuText = this.scene.add.text(this.scene.cameras.main.centerX, this.scene.cameras.main.centerY + 120, 'Esc to Main Menu', 
-            { 
-              fontSize: '32px',
-              fill: '#fff' 
-            });
-            mainMenuText.setOrigin(0.5, 0.5);
-
-            localStorage.setItem('highScore', ScoreSystem.highScore);
-
-            this.scene.physics.pause();
-            this.player.Restart();
+      if (this.player.isDead) {
+        const style = { 
+          fontSize: '64px', 
+          fill: '#ff0000', 
+          fontFamily: 'Arial', 
+          stroke: '#000', 
+          strokeThickness: 6 
+        };
+        const gameOverText = this.scene.add.text(this.scene.cameras.main.centerX, this.scene.cameras.main.centerY, 'Game Over', style);
+        gameOverText.setOrigin(0.5, 0.5);
+        const restartStyle = { 
+          fontSize: '32px', 
+          fill: '#fff', 
+          fontFamily: 'Arial', 
+          stroke: '#000', 
+          strokeThickness: 4 
+        };
+        const restartText = this.scene.add.text(this.scene.cameras.main.centerX, this.scene.cameras.main.centerY + 80, '[Enter] to restart', restartStyle);
+        restartText.setOrigin(0.5, 0.5);
+        restartText.setStyle({ fontWeight: 'bold', fill: '#ff0' });
+        const mainMenuText = this.scene.add.text(this.scene.cameras.main.centerX, this.scene.cameras.main.centerY + 120, '[Esc] to Main Menu', restartStyle);
+        mainMenuText.setOrigin(0.5, 0.5);
+        mainMenuText.setStyle({ fontWeight: 'bold', fill: '#ff0' });
+        localStorage.setItem('highScore', ScoreSystem.highScore);
+        this.scene.physics.pause();
+        this.player.Restart();
         }
     }
 }

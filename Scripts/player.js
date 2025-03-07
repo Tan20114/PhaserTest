@@ -19,7 +19,7 @@ export default class Player {
     this.airJumpResetValue = 1;
     this.platformSpawnTime = 500;
 
-    this.player = scene.physics.add.sprite(x, y, "player");
+    this.player = scene.physics.add.sprite(x, y, "player").setScale(1);
     this.player.setCollideWorldBounds(true);
     //this.player.body.world.bounds.y = Number.NEGATIVE_INFINITY;
     this.player.body.world.bounds.height = Number.POSITIVE_INFINITY;
@@ -66,6 +66,7 @@ export default class Player {
 
   IsGround = (playerObj, platformObj) => {
     this.isGround = true;
+    this.GroundParticle(playerObj);
     ScoreSystem.AddScore();
     this.platform.destroyPlatform(); // Destroy the platform after collision
 
@@ -105,6 +106,7 @@ export default class Player {
 
   AirJump() {
     if (this.airJumpCount >= 1) {
+      this.GroundParticle(this.player);
       this.player.setVelocityY(-this.airJumpForce);
       this.airJumpCount--;
     }
@@ -190,5 +192,20 @@ export default class Player {
       this.bounceForce = 600;
       this.platformSpawnTime = 1000;
     }
+  }
+
+  GroundParticle(target) {
+    // Create particle emitter for ground collision
+    const particles = this.scene.add.particles('dust');
+    const emitter = particles.createEmitter({
+      speed: 100,
+      scale: { start: .5, end: 0 },
+      blendMode: 'ADD'
+    });
+
+    emitter.setPosition(target.x, target.y);
+    this.scene.time.delayedCall(400, () => {
+      particles.destroy();
+    });
   }
 }
