@@ -7,6 +7,11 @@ export default class Player {
     this.scene = scene;
     this.platform = platform; // The platform object from platform.js
     this.powerUp = powerUp; // The power up object from powerUp.js
+
+    this.jumpSound = this.scene.sound.add('jump');
+    this.powerUpSFX = this.scene.sound.add('upCollect');
+    this.effectOut = this.scene.sound.add('upOut');
+
     this.playerSpeed = 200;
     this.airJumpCount = 1;
     this.jumpForce = 300;
@@ -14,6 +19,7 @@ export default class Player {
 
     this.isGround = false;
     this.isDead = false;
+    this.state = 'idle';
 
     this.bounceForce = 350;
     this.airJumpResetValue = 1;
@@ -23,6 +29,7 @@ export default class Player {
     this.player.setCollideWorldBounds(true);
     //this.player.body.world.bounds.y = Number.NEGATIVE_INFINITY;
     this.player.body.world.bounds.height = Number.POSITIVE_INFINITY;
+    this.player.setDepth(1);
 
     // Set up the collider with the platform
     this.scene.physics.add.collider(this.player, this.platform.platform, this.IsGround, null, this);
@@ -42,6 +49,7 @@ export default class Player {
     this.PlayerMove();
     this.FallCheck()
     this.DifficultyUp();
+    this.StateUpdate();
     
     if(this.powerUp.currentPowerUp != null)
     {
@@ -53,10 +61,13 @@ export default class Player {
   PlayerMove() {
     if (this.cursors.left.isDown || this.keys.left.isDown) {
       this.player.setVelocityX(-this.playerSpeed);
+      this.state = 'moveLeft';
     } else if (this.cursors.right.isDown || this.keys.right.isDown) {
       this.player.setVelocityX(this.playerSpeed);
+      this.state = 'moveRight';
     } else {
       this.player.setVelocityX(0);
+      this.state = 'idle';
     }
 
     if (this.cursors.up.isDown || this.keys.up.isDown) {
@@ -92,6 +103,7 @@ export default class Player {
   PlayerJump() {
     if (this.player.body.onFloor()) {
       this.player.setVelocityY(-this.jumpForce);
+      this.jumpSound.play();
       this.isGround = false;
       this.jumpForce = 300;
 
@@ -108,6 +120,7 @@ export default class Player {
     if (this.airJumpCount >= 1) {
       this.GroundParticle(this.player);
       this.player.setVelocityY(-this.airJumpForce);
+      this.jumpSound.play();
       this.airJumpCount--;
     }
   }
@@ -116,20 +129,22 @@ export default class Player {
   {
     // Destroy the power-up
     powerUp.destroy();
+    this.powerUpSFX.play();
     PowerUp.powerUpCount--;
 
     // Destroy particle effects if they exist
     if (powerUp.emitter) {
-        powerUp.emitter.stop();
-        powerUp.emitter.manager.destroy();
-    }
-
-    // Apply speed boost
-    this.playerSpeed *= 2;
-
-    // Reset speed after 5 seconds
-    this.scene.time.delayedCall(5000, () => {
+        powerUp.emitter.startFollow(this.player);
+      }
+      
+      // Apply speed boost
+      this.playerSpeed *= 2;
+      
+      // Reset speed after 5 seconds
+      this.scene.time.delayedCall(5000, () => {
         this.playerSpeed /= 2;
+        powerUp.emitter.manager.destroy();
+        this.effectOut.play();
     });
   };
 
@@ -207,5 +222,23 @@ export default class Player {
     this.scene.time.delayedCall(400, () => {
       particles.destroy();
     });
+  }
+
+  StateUpdate()
+  {
+    if(this.state === 'idle')
+    {
+      this.player.play('Idle', true);
+    }
+    else if(this.state === 'moveLeft')
+    {
+      this.player.play('Move', true);
+      this.player.setFlipX(true);
+    }
+    else if(this.state === 'moveRight')
+    {
+      this.player.play('Move', true);
+      this.player.setFlipX(false);
+    }
   }
 }

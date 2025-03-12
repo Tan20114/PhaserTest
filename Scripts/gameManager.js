@@ -1,6 +1,7 @@
 import Platform from "./platform.js";
 import ScoreSystem from "./scoreSystem.js";
 import PowerUp from "./powerUp.js";
+import GameplayScene from "./gameplayScene.js";
 
 export default class GameManager
 {
@@ -10,6 +11,9 @@ export default class GameManager
         this.player = player;
         this.platform = platform;
         this.scoreSystem = scoreSystem;
+
+        this.overSFX = this.scene.sound.add('gameOver');
+        this.hasPlayedGameOverSFX = false;
     }
 
     Update()
@@ -24,6 +28,12 @@ export default class GameManager
     GameOver()
     {
       if (this.player.isDead) {
+        if(!this.hasPlayedGameOverSFX)
+          {
+            this.hasPlayedGameOverSFX = true;
+            this.overSFX.play(); // ✅ Play only once
+          }
+        GameplayScene.bgm.pause();
         const style = { 
           fontSize: '64px', 
           fill: '#ff0000', 

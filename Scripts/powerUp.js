@@ -15,7 +15,7 @@ export default class PowerUp {
 
     spawnPowerUp() {
         if (PowerUp.powerUpCount === 0) {
-            if (Phaser.Math.Between(1, 100) <= 100) {
+            if (Phaser.Math.Between(1, 100) <= 25) {
                 // Add particles
                 this.particles = this.scene.add.particles('powerUp');
                 this.emitter = this.particles.createEmitter({

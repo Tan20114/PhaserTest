@@ -131,9 +131,10 @@ export default class Platform {
             spikeX = x + Phaser.Math.Between(-platform.displayWidth / 2, platform.displayWidth / 2);
             } while (lastSpikeX !== null && Math.abs(spikeX - lastSpikeX) < 50);
 
-            const spike = this.scene.add.sprite(spikeX, y - 30, 'spike').setScale(0.05);
+            const spike = this.scene.add.sprite(spikeX, y - 30, 'spike').setScale(.65);
             this.scene.physics.add.existing(spike);
             spike.body.allowGravity = true;
+            spike.play('Fire');
 
             this.scene.physics.add.collider(platform, spike);
 

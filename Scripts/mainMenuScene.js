@@ -6,6 +6,7 @@ export default class MainMenuScene extends Phaser.Scene {
         super({ key: 'MainMenuScene' });
     }
 
+
     preload() {
         this.load.image('logo', './Asset/Sprite/Logo.png');
 
@@ -20,6 +21,9 @@ export default class MainMenuScene extends Phaser.Scene {
         this.load.image('sky2', './Asset/Sprite/Background/BGColor2.png');
         this.load.image('lava', './Asset/Sprite/Background/LavaFirst.png');
 
+        // Sound
+        this.load.audio('bgm','./Asset/Sound/bgm.mp3');
+
         // Lava animation
         this.load.spritesheet('lavaSheet', './Asset/Sprite/Background/LavaSheet.png', {
             frameWidth: 800,
@@ -28,6 +32,10 @@ export default class MainMenuScene extends Phaser.Scene {
     }
 
     create() {
+        this.bgm = this.sound.add('bgm');
+        this.bgm.setLoop(true);
+        this.bgm.play()
+
         // Lava Anim
         this.anims.create({
             key: 'lavaAnim',
@@ -89,6 +97,7 @@ export default class MainMenuScene extends Phaser.Scene {
         });
 
         playButtonBg.on('pointerdown', () => {
+            this.bgm.pause();
             this.scene.start('GameplayScene');
         });
 

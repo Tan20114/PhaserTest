@@ -6,6 +6,8 @@ import PowerUp from "./powerUp.js";
 import Paralax from "./paralaxBG.js";
 
 export default class GameplayScene extends Phaser.Scene {
+
+    static bgm;
     constructor() {
         super({ key: 'GameplayScene' });
     }
@@ -13,10 +15,13 @@ export default class GameplayScene extends Phaser.Scene {
     preload() {
         // Entity
         this.load.image("player", "./Asset/Sprite/Combiner.png");
+        this.load.spritesheet('playerIdle','./Asset/Sprite/StaySheet.png', {frameWidth:32, frameHeight:32});
+        this.load.spritesheet('playerMove','./Asset/Sprite/MoveSheet.png', {frameWidth:32, frameHeight:32});
         this.load.image("platform", "./Asset/Sprite/Platform.png");
         this.load.image('spike', './Asset/Sprite/spike.png');
+        this.load.spritesheet('fire', './Asset/Sprite/fire.png', {frameWidth:32, frameHeight: 48});
         this.load.image('powerUp', './Asset/Sprite/powerUp.png');
-        this.load.spritesheet('powerUpSheet', './Asset/Sprite/powerUpsheet.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('powerUpSheet', './Asset/Sprite/powerUpSheet.png', { frameWidth: 32, frameHeight: 32 });
         this.load.image('bouncePlat', './Asset/Sprite/BouncyPlatform.png');
 
         //Background
@@ -33,9 +38,20 @@ export default class GameplayScene extends Phaser.Scene {
         // Element
         this.load.spritesheet('lavaSheet', './Asset/Sprite/Background/LavaSheet.png', {frameWidth: 800,frameHeight: 600});
         this.load.image('dust', './Asset/Sprite/GroundParticle.png');
+
+        // Sound
+        this.load.audio('bgm','./Asset/Sound/bgm.mp3')
+        this.load.audio('jump','./Asset/Sound/jumpSFX.mp3');
+        this.load.audio('upCollect','./Asset/Sound/SpeedUpCollect.mp3');
+        this.load.audio('upOut','./Asset/Sound/effectOut.mp3');
+        this.load.audio('gameOver','./Asset/Sound/gameOver.mp3');
     }
 
     create() {
+        GameplayScene.bgm = this.sound.add('bgm');
+        GameplayScene.bgm.setLoop(true);
+        GameplayScene.bgm.play()
+
         // Animation
         this.anims.create({
             key: 'powerUpAnim',
@@ -51,6 +67,27 @@ export default class GameplayScene extends Phaser.Scene {
             repeat: -1
         });
 
+        this.anims.create({
+            key: 'Idle',
+            frames: this.anims.generateFrameNumbers('playerIdle', {start:0,end:5}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'Move',
+            frames: this.anims.generateFrameNumbers('playerMove', {start:0, end:5}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'Fire',
+            frames: this.anims.generateFrameNumbers('fire',{start:0,end:3}),
+            frameRate: 5,
+            repeat: -1
+        });
+
         this.paralax = new Paralax(this);
         // UI
         const style = { fontSize: '32px', fill: '#fff', stroke: '#000', strokeThickness: 4 };
@@ -61,6 +98,10 @@ export default class GameplayScene extends Phaser.Scene {
         scoreTxt.setScrollFactor(0);
         highScoreTxt.setScrollFactor(0);
         this.airJumpTxt.setScrollFactor(0);
+        scoreTxt.setDepth(3);
+        highScoreTxt.setDepth(3);
+        this.airJumpTxt.setDepth(3);
+        this.levelTxt.setDepth(3);
 
         // System Reference
         this.scoreSystem = new ScoreSystem(this, scoreTxt, highScoreTxt, this.levelTxt);
